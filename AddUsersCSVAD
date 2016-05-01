@@ -1,0 +1,14 @@
+Import-Module ActiveDirectory
+$root = get-adforest | Select Name
+Import-Csv "C:\Users.csv" | ForEach-Object {
+ $userPrincipal = $_."samAccountName" + "@wleuro.local"
+New-ADUser -Name $_.Name `
+-GivenName $_."GivenName" `
+-SurName $_."SureName" `
+-DisplayName $_."DisplayName" `
+-SamAccountName  $_."samAccountName" `
+-UserPrincipalName  $userPrincipal `
+-AccountPassword (ConvertTo-SecureString "P@ssw0rd" -AsPlainText -Force) `
+-ChangePasswordAtLogon $false `
+-Enabled $true
+}
